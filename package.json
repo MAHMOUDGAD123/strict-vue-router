@@ -1,0 +1,43 @@
+{
+  "name": "strict-vue-router",
+  "version": "0.0.1",
+  "description": "A comprehensive TypeScript type system to create a fully typed routing with vue-router",
+  "types": "types/index.d.ts",
+  "main": "index.ts",
+  "files": [
+    "index.ts",
+    "types/index.d.ts"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MAHMOUDGAD123/strict-vue-router.git"
+  },
+  "keywords": [
+    "typescript",
+    "vue-router",
+    "vue",
+    "types",
+    "declaration",
+    "routing"
+  ],
+  "author": "MAHMOUDGAD123",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {},
+  "packageManager": "pnpm@10.24.0",
+  "dependencies": {
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  }
+}

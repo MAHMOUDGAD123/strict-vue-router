@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["ES2018", "DOM", "ESNext"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "declaration": true,
+    "types": ["./types/index.d.ts"]
+  },
+  "include": ["./index.ts", "./types/index.d.ts"]
+}
