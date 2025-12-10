@@ -593,6 +593,11 @@ export type CustomRouteInfo<
   params: Params;
 
   /**
+   * This property is used to becasue it's needed for the {@link RouteLocationAsRelativeTyped}
+   */
+  paramsRaw: Params;
+
+  /**
    * Type definition for URL query parameters.
    *
    * Query params appear after `?` in the URL (e.g., `/users?page=1&sort=name`).
@@ -1202,18 +1207,13 @@ type RawRouteComponent = RouteComponent | Lazy<RouteComponent>;
 /**
  * Holds all possible route record paths
  */
-type CustomRouteRecordPath<
+type RouteRecordPathFromName<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap
 > = JoinPaths<CustomRouteMap[Name]["routePath"]> | (string & {});
 
 /**
- * Holds all possible route paths
+ * Extract all paths from a specific route name
  */
-type CustomRoutePath =
-  | JoinPaths<CustomRouteMap[keyof CustomRouteMap]["path"]>
-  | (string & {});
-
-/** Extract all paths from a specific route name */
 type RouteNameToPath<Name extends keyof CustomRouteMap> = Join<
   CustomRouteMap[Name]["path"]
 >;
@@ -1268,9 +1268,9 @@ type RouteParamsFromName<Name extends keyof CustomRouteMap> =
 type RouteQueryFromName<Name extends keyof CustomRouteMap> =
   Name extends keyof CustomRouteMap
     ? CustomRouteMap[Name]["query"] extends never
-      ? LocationQuery
+      ? never
       : CustomRouteMap[Name]["query"]
-    : LocationQuery;
+    : never;
 
 /** Extract hash by route name */
 type RouteHashFromName<Name extends keyof CustomRouteMap> =
@@ -1370,22 +1370,25 @@ type _RouteRecordPropsMultipleViews<
 /**
  * A fixed version of {@link RouteRecordRedirectOption}.
  *
- * Fix the conflict with {@link CustomRouteLocationRaw} (name) by ignore
+ * Fix the conflict with {@link _RouteLocationRaw} (name) by ignore
  * the {@link Function.name} property.
  */
 type _RouteRecordRedirectOption<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap
 > =
-  | CustomRouteLocationRaw
+  | _RouteLocationRaw
   | (((
       to: RouteLocation<Name>,
       from: RouteLocationNormalizedLoaded
-    ) => CustomRouteLocationRaw) & { name?: never });
+    ) => _RouteLocationRaw) & { name?: never });
 
+/**
+ * A custom version of the {@link _RouteRecordBase}
+ */
 interface __RouteRecordBase<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap
 > extends _RouteRecordBase {
-  path: CustomRouteRecordPath<Name>;
+  path: RouteRecordPathFromName<Name>;
   name?: Name;
   // Strict children typing!
   children?: _RouteRecordChild<Name>[];
@@ -1533,7 +1536,7 @@ type RouteMetaTitleTyped<
  * A Cutomized version from {@link RouteLocationRaw} to fix the apperance of the String object
  * methods and properties in the {@link RouteLocationRaw} caused by {@link _LiteralUnion} type.
  */
-type CustomRouteLocationRaw<
+type _RouteLocationRaw<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap
 > = RouteMapGeneric extends CustomRouteMap
   ?
@@ -1551,7 +1554,7 @@ interface CustomNavigationGuardNext<
 > {
   (): void;
   (error: Error): void;
-  (location: CustomRouteLocationRaw<Name>): void;
+  (location: _RouteLocationRaw<Name>): void;
   (valid: boolean | undefined): void;
   (cb: NavigationGuardNextCallback): void;
 }
@@ -1561,9 +1564,9 @@ type CustomNavigationGuardReturn<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap
 > =
   | void
-  | (Error & { name: never }) // fix the conflict with (Error.name) and (CustomRouteLocationRaw.name)
+  | (Error & { name: never }) // fix the conflict with (Error.name) and (_RouteLocationRaw.name)
   | boolean
-  | CustomRouteLocationRaw<Name>;
+  | _RouteLocationRaw<Name>;
 
 /** A custom {@link NavigationGuard} */
 interface CustomNavigationGuard<
@@ -1612,7 +1615,7 @@ interface CustomUseLinkOptions<
     | RouteNameToPath<Name>
     | RouteLocationAsRelativeTyped<CustomRouteMap, Name>
     | RouteLocationAsPath<Name>
-    | CustomRouteLocationRaw<Name>
+    | _RouteLocationRaw<Name>
   >;
   replace?: MaybeRef<boolean | undefined>;
   viewTransition?: boolean;
@@ -1637,7 +1640,7 @@ declare module "vue-router" {
   // --------------------------------------------------------------
 
   interface RouteRecordSingleView {
-    path: CustomRouteRecordPath;
+    path: RouteRecordPathFromName;
     name?: keyof CustomRouteMap;
     beforeEnter?:
       | CustomNavigationGuardWithThis
@@ -1645,7 +1648,7 @@ declare module "vue-router" {
   }
 
   interface RouteRecordSingleViewWithChildren {
-    path: CustomRouteRecordPath;
+    path: RouteRecordPathFromName;
     name?: keyof CustomRouteMap;
     beforeEnter?:
       | CustomNavigationGuardWithThis
@@ -1653,7 +1656,7 @@ declare module "vue-router" {
   }
 
   interface RouteRecordMultipleViews {
-    path: CustomRouteRecordPath;
+    path: RouteRecordPathFromName;
     name?: keyof CustomRouteMap;
     beforeEnter?:
       | CustomNavigationGuardWithThis
@@ -1661,7 +1664,7 @@ declare module "vue-router" {
   }
 
   interface RouteRecordMultipleViewsWithChildren {
-    path: CustomRouteRecordPath;
+    path: RouteRecordPathFromName;
     name?: keyof CustomRouteMap;
     beforeEnter?:
       | CustomNavigationGuardWithThis
@@ -1669,7 +1672,7 @@ declare module "vue-router" {
   }
 
   interface RouteRecordRedirect {
-    path: CustomRouteRecordPath;
+    path: RouteRecordPathFromName;
     name?: keyof CustomRouteMap;
     beforeEnter?:
       | CustomNavigationGuardWithThis
@@ -1760,11 +1763,11 @@ declare module "vue-router" {
   // Extend Router types
   interface Router {
     push<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      to: CustomRouteLocationRaw<Name>
+      to: _RouteLocationRaw<Name>
     ): Promise<NavigationFailure | void | undefined>;
 
     replace<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      to: CustomRouteLocationRaw<Name>
+      to: _RouteLocationRaw<Name>
     ): Promise<NavigationFailure | void | undefined>;
 
     addRoute(
@@ -1795,11 +1798,11 @@ declare module "vue-router" {
   }
 
   /**
-   * Extend the type of the (to) property and use {@link CustomRouteLocationRaw} intead of {@link RouteLocationRaw}
+   * Extend the type of the (to) property and use {@link _RouteLocationRaw} intead of {@link RouteLocationRaw}
    * to fix the {@link _LiteralUnion} types issue.
    */
   interface RouterLinkProps {
-    to: CustomRouteLocationRaw;
+    to: _RouteLocationRaw;
   }
 
   // Customized the RouteRecordInfo
@@ -1881,7 +1884,9 @@ type JoinPaths<T extends string[]> = T extends [
   ? `${Head}${Tail extends [] ? "" : `/${Join<Tail>}`}` | JoinPaths<Tail>
   : never;
 
-/** Helper to fully join a tuple into one string. */
+/**
+ * Helper to fully join a tuple into one string.
+ */
 type Join<T extends string[]> = T extends [
   infer Head extends string,
   ...infer Tail extends string[]
