@@ -30,6 +30,8 @@ import type {
   RouteLocationAsRelativeTyped,
   NavigationHookAfter,
   UseLinkOptions,
+  RouterLinkProps,
+  RouteRecordRedirectOption,
 } from "vue-router";
 
 /**
@@ -769,7 +771,7 @@ export type CustomRouteInfo<
    * ```
    */
   hash: Hash;
-}
+};
 
 /**
  * Resolves and sets the page title for any route.
@@ -1366,7 +1368,9 @@ type _RouteRecordPropsMultipleViews<
     };
 
 /**
- * Fix the conflict wirh {@link CustomRouteLocationRaw} (name) by ignore
+ * A fixed version of {@link RouteRecordRedirectOption}.
+ *
+ * Fix the conflict with {@link CustomRouteLocationRaw} (name) by ignore
  * the {@link Function.name} property.
  */
 type _RouteRecordRedirectOption<

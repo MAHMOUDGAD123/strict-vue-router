@@ -32,11 +32,14 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "nitropack": "^2.12.9",
+    "nuxt": "^4.2.2",
     "typescript": "^5.8.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },
   "peerDependencies": {
+    "nuxt": "^4.2.2",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   }
