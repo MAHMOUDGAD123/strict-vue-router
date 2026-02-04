@@ -429,7 +429,7 @@ export type CustomRouteInfo<
   Query extends Record<string, unknown> = never,
   Props extends Record<string, unknown> = never,
   HistoryState extends Record<string, unknown> = never,
-  Hash extends `#${string}` = never
+  Hash extends `#${string}` = never,
 > = {
   /**
    * Route record path segments as defined in the route configuration.
@@ -919,7 +919,7 @@ export const resolveRouteTitle: (route: RouteLocationNormalized) => void;
  * @see {@link defineRoutes} for creating the final routes array
  */
 export const defineRouteRecord: <Name extends keyof CustomRouteMap>(
-  route: _RouteRecordRaw<Name>
+  route: _RouteRecordRaw<Name>,
 ) => _RouteRecordRaw<Name>;
 
 /**
@@ -1009,10 +1009,10 @@ export const defineRouteRecord: <Name extends keyof CustomRouteMap>(
  */
 export const defineChildRouteRecord: <
   ParentName extends keyof CustomRouteMap,
-  ChildName extends ChildrenNamesFromRoute<ParentName>
+  ChildName extends ChildrenNamesFromRoute<ParentName>,
 >(
   _parent: ParentName,
-  config: _RouteRecordRaw<ChildName>
+  config: _RouteRecordRaw<ChildName>,
 ) => _RouteRecordRaw<ChildName>;
 
 /**
@@ -1104,7 +1104,7 @@ export const defineChildRouteRecord: <
  * @see {@link defineRouteRecord} for top-level routes
  */
 export const createChildDefiner: <ParentName extends keyof CustomRouteMap>(
-  _parent: ParentName
+  _parent: ParentName,
 ) => DefineChildrenFn<ParentName>;
 
 /**
@@ -1189,7 +1189,7 @@ export const createChildDefiner: <ParentName extends keyof CustomRouteMap>(
  * @see {@link resolveRouteTitle} for dynamic page title resolution
  */
 export const defineRoutes: (
-  routes: Readonly<RouteRecordUnion[]>
+  routes: Readonly<RouteRecordUnion[]>,
 ) => Readonly<RouteRecordRaw[]>;
 
 type Lazy<T> = () => Promise<T>;
@@ -1208,7 +1208,7 @@ type RawRouteComponent = RouteComponent | Lazy<RouteComponent>;
  * Holds all possible route record paths
  */
 type RouteRecordPathFromName<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > = JoinPaths<CustomRouteMap[Name]["routePath"]> | (string & {});
 
 /**
@@ -1292,7 +1292,7 @@ type RouteRecordPropsFromName<Name extends keyof CustomRouteMap> =
  * Extract historyState by route name
  */
 type RouteHistoryStateFromName<
-  Name extends keyof CustomRouteMap | undefined = undefined
+  Name extends keyof CustomRouteMap | undefined = undefined,
 > = Name extends keyof CustomRouteMap
   ? CustomRouteMap[Name]["historyState"] extends never
     ? HistoryState
@@ -1325,7 +1325,8 @@ export type ChildrenNamesFromRoute<Name extends keyof CustomRouteMap> =
  */
 type _RouteRecordChild<
   ParentName extends keyof CustomRouteMap,
-  ChildName extends ChildrenNamesFromRoute<ParentName> = ChildrenNamesFromRoute<ParentName>
+  ChildName extends ChildrenNamesFromRoute<ParentName> =
+    ChildrenNamesFromRoute<ParentName>,
 > = ChildName extends keyof CustomRouteMap ? _RouteRecordRaw<ChildName> : never;
 
 /**
@@ -1339,23 +1340,23 @@ export type RouteRecordUnion = {
  * Define nested children with proper parent chain
  */
 export type DefineChildrenFn<ParentName extends keyof CustomRouteMap> = <
-  ChildName extends ChildrenNamesFromRoute<ParentName>
+  ChildName extends ChildrenNamesFromRoute<ParentName>,
 >(
-  config: _RouteRecordRaw<ChildName>
+  config: _RouteRecordRaw<ChildName>,
 ) => _RouteRecordRaw<ChildName>;
 
 // Customized the route record types override all (RouteRecordRaw) dependencies
 // -----------------------------------------------------------------------
 
 type _RouteRecordPropsSingleView<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | boolean
   | RouteRecordPropsFromName<Name>
   | ((to: RouteLocationNormalized<Name>) => RouteRecordPropsFromName<Name>);
 
 type _RouteRecordPropsMultipleViews<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | boolean
   | {
@@ -1363,7 +1364,7 @@ type _RouteRecordPropsMultipleViews<
         | boolean
         | CustomRouteMap[Name]["props"][K]
         | ((
-            to: RouteLocationNormalized<Name>
+            to: RouteLocationNormalized<Name>,
           ) => CustomRouteMap[Name]["props"][K]);
     };
 
@@ -1374,19 +1375,19 @@ type _RouteRecordPropsMultipleViews<
  * the {@link Function.name} property.
  */
 type _RouteRecordRedirectOption<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | _RouteLocationRaw
   | (((
       to: RouteLocation<Name>,
-      from: RouteLocationNormalizedLoaded
+      from: RouteLocationNormalizedLoaded,
     ) => _RouteLocationRaw) & { name?: never });
 
 /**
  * A custom version of the {@link _RouteRecordBase}
  */
 interface __RouteRecordBase<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends _RouteRecordBase {
   path: RouteRecordPathFromName<Name>;
   name?: Name;
@@ -1403,7 +1404,7 @@ interface __RouteRecordBase<
 }
 
 interface _RouteRecordSingleView<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends __RouteRecordBase<Name> {
   /**
    * Component to display when the URL matches this route.
@@ -1416,7 +1417,7 @@ interface _RouteRecordSingleView<
 }
 
 interface _RouteRecordSingleViewWithChildren<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends __RouteRecordBase<Name> {
   /**
    * Component to display when the URL matches this route.
@@ -1427,7 +1428,7 @@ interface _RouteRecordSingleViewWithChildren<
 }
 
 interface _RouteRecordMultipleViews<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends __RouteRecordBase<Name> {
   /**
    * Components to display when the URL matches this route. Allow using named views.
@@ -1445,7 +1446,7 @@ interface _RouteRecordMultipleViews<
 }
 
 interface _RouteRecordMultipleViewsWithChildren<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends __RouteRecordBase<Name> {
   /**
    * Components to display when the URL matches this route. Allow using named views.
@@ -1464,7 +1465,7 @@ interface _RouteRecordMultipleViewsWithChildren<
 }
 
 interface _RouteRecordRedirect<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > extends __RouteRecordBase<Name> {
   redirect: _RouteRecordRedirectOption<Name>;
   component?: never;
@@ -1473,7 +1474,7 @@ interface _RouteRecordRedirect<
 }
 
 export type _RouteRecordRaw<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | _RouteRecordSingleView<Name>
   | _RouteRecordSingleViewWithChildren<Name>
@@ -1488,7 +1489,7 @@ type PropsMapPath<Name extends keyof CustomRouteMap> =
   | `query.${RouteQueryKeysFromName<Name> & string}`;
 
 type RouteMetaTitleTyped<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > = {
   /**
    * You should provide it as default value for the (document.title) if the (isDynamic) if falsy.
@@ -1537,7 +1538,7 @@ type RouteMetaTitleTyped<
  * methods and properties in the {@link RouteLocationRaw} caused by {@link _LiteralUnion} type.
  */
 type _RouteLocationRaw<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > = RouteMapGeneric extends CustomRouteMap
   ?
       | RouteLocationAsString
@@ -1549,8 +1550,8 @@ type _RouteLocationRaw<
       | RouteLocationAsPathTypedList<CustomRouteMap>[Name];
 
 /** A custom {@link NavigationGuardNext} */
-interface CustomNavigationGuardNext<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+export interface CustomNavigationGuardNext<
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   (): void;
   (error: Error): void;
@@ -1561,7 +1562,7 @@ interface CustomNavigationGuardNext<
 
 /** A custom {@link NavigationGuardReturn} */
 type CustomNavigationGuardReturn<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | void
   | (Error & { name: never }) // fix the conflict with (Error.name) and (_RouteLocationRaw.name)
@@ -1570,12 +1571,12 @@ type CustomNavigationGuardReturn<
 
 /** A custom {@link NavigationGuard} */
 interface CustomNavigationGuard<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   (
     to: RouteLocationNormalized<Name>,
     from: RouteLocationNormalizedLoaded,
-    next: CustomNavigationGuardNext
+    next: CustomNavigationGuardNext,
   ): _Awaitable<CustomNavigationGuardReturn>;
 }
 
@@ -1583,12 +1584,12 @@ interface CustomNavigationGuard<
  * A custom {@link NavigationHookAfter}
  */
 interface CustomNavigationHookAfter<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   (
     to: RouteLocationNormalized<Name>,
     from: RouteLocationNormalizedLoaded,
-    failure?: NavigationFailure | void
+    failure?: NavigationFailure | void,
   ): any;
 }
 
@@ -1597,19 +1598,19 @@ interface CustomNavigationHookAfter<
  * */
 interface CustomNavigationGuardWithThis<
   T = undefined,
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   (
     this: T,
     to: RouteLocationNormalized<Name>,
     from: RouteLocationNormalizedLoaded,
-    next: CustomNavigationGuardNext
+    next: CustomNavigationGuardNext,
   ): _Awaitable<CustomNavigationGuardReturn>;
 }
 
 /** A custom {@link UseLinkOptions} */
 interface CustomUseLinkOptions<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   to: MaybeRef<
     | RouteNameToPath<Name>
@@ -1626,12 +1627,12 @@ interface CustomUseLinkOptions<
 //====================================================================================
 
 interface CustomErrorListener<
-  Name extends keyof CustomRouteMap = keyof CustomRouteMap
+  Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > {
   (
     error: Error | NavigationFailure,
     to: RouteLocationNormalized<Name>,
-    from: RouteLocationNormalizedLoaded
+    from: RouteLocationNormalizedLoaded,
   ): any;
 }
 
@@ -1681,7 +1682,7 @@ declare module "vue-router" {
 
   interface RouteLocationAsPathTyped<
     RouteMap extends RouteMapGeneric = RouteMapGeneric,
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   > {
     query?: RouteQueryFromName<Name>;
     hash?: RouteHashFromName<Name>;
@@ -1690,7 +1691,7 @@ declare module "vue-router" {
 
   interface RouteLocationAsRelativeTyped<
     RouteMap extends RouteMapGeneric = RouteMapGeneric,
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   > {
     query?: RouteQueryFromName<Name>;
     hash?: RouteHashFromName<Name>;
@@ -1699,7 +1700,7 @@ declare module "vue-router" {
 
   interface RouteLocationNormalizedLoadedTyped<
     RouteMap extends RouteMapGeneric = RouteMapGeneric,
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   > {
     query: RouteQueryFromName<Name>;
     hash: RouteHashFromName<Name>;
@@ -1709,7 +1710,7 @@ declare module "vue-router" {
 
   interface RouteLocationNormalizedTyped<
     RouteMap extends RouteMapGeneric = RouteMapGeneric,
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   > {
     query: RouteQueryFromName<Name>;
     hash: RouteHashFromName<Name>;
@@ -1720,7 +1721,7 @@ declare module "vue-router" {
   // There's no need to override this interface because it depends on (RouteLocationTyped)
   interface RouteLocationResolvedTyped<
     RouteMap extends RouteMapGeneric,
-    Name extends keyof CustomRouteMap
+    Name extends keyof CustomRouteMap,
   > {
     path: RouteNameToPath<Name>;
     query: RouteQueryFromName<Name>;
@@ -1731,7 +1732,7 @@ declare module "vue-router" {
 
   interface RouteLocationTyped<
     RouteMap extends RouteMapGeneric,
-    Name extends keyof CustomRouteMap
+    Name extends keyof CustomRouteMap,
   > {
     path: RouteNameToPath<Name>;
     query: RouteQueryFromName<Name>;
@@ -1743,36 +1744,36 @@ declare module "vue-router" {
   // --------------------------------------------------------------
 
   function loadRouteLocation<
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   >(
-    route: RouteLocation<Name> | RouteLocationNormalized<Name>
+    route: RouteLocation<Name> | RouteLocationNormalized<Name>,
   ): Promise<RouteLocationNormalizedLoaded<Name>>;
 
   function useLink<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-    props: CustomUseLinkOptions<Name>
+    props: CustomUseLinkOptions<Name>,
   ): UseLinkReturn<Name>;
 
   function onBeforeRouteLeave<
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   >(leaveGuard: CustomNavigationGuard<Name>): void;
 
   function onBeforeRouteUpdate<
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   >(updateGuard: CustomNavigationGuard<Name>): void;
 
   // Extend Router types
   interface Router {
     push<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      to: _RouteLocationRaw<Name>
+      to: _RouteLocationRaw<Name>,
     ): Promise<NavigationFailure | void | undefined>;
 
     replace<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      to: _RouteLocationRaw<Name>
+      to: _RouteLocationRaw<Name>,
     ): Promise<NavigationFailure | void | undefined>;
 
     addRoute(
       parentName: NonNullable<keyof CustomRouteMap>,
-      route: _RouteRecordRaw
+      route: _RouteRecordRaw,
     ): () => void;
     addRoute(route: _RouteRecordRaw): () => void;
 
@@ -1781,19 +1782,19 @@ declare module "vue-router" {
     hasRoute(name: NonNullable<keyof CustomRouteMap>): boolean;
 
     beforeEach<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      guard: CustomNavigationGuardWithThis<undefined, Name>
+      guard: CustomNavigationGuardWithThis<undefined, Name>,
     ): () => void;
 
     beforeResolve<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      guard: CustomNavigationGuardWithThis<undefined, Name>
+      guard: CustomNavigationGuardWithThis<undefined, Name>,
     ): () => void;
 
     afterEach<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      guard: CustomNavigationHookAfter<Name>
+      guard: CustomNavigationHookAfter<Name>,
     ): () => void;
 
     onError<Name extends keyof CustomRouteMap = keyof CustomRouteMap>(
-      handler: CustomErrorListener<Name>
+      handler: CustomErrorListener<Name>,
     ): () => void;
   }
 
@@ -1811,7 +1812,7 @@ declare module "vue-router" {
     Path extends string = string,
     ParamsRaw extends RouteParamsRawGeneric = RouteParamsRawGeneric,
     Params extends RouteParamsGeneric = RouteParamsGeneric,
-    ChildrenNames extends string | symbol = never
+    ChildrenNames extends string | symbol = never,
   > {
     name: Name;
     path: Path;
@@ -1854,12 +1855,12 @@ declare module "vue-router" {
 
   // Custom route meta
   interface RouteMeta<
-    Name extends keyof CustomRouteMap = keyof CustomRouteMap
+    Name extends keyof CustomRouteMap = keyof CustomRouteMap,
   > {
     /**
      * The route title (document.title) value.
      */
-    title: RouteMetaTitleTyped<Name> | (string & {});
+    title: RouteMetaTitleTyped<Name>;
   }
 }
 
@@ -1879,7 +1880,7 @@ declare module "vue-router" {
  */
 type JoinPaths<T extends string[]> = T extends [
   infer Head extends string,
-  ...infer Tail extends string[]
+  ...infer Tail extends string[],
 ]
   ? `${Head}${Tail extends [] ? "" : `/${Join<Tail>}`}` | JoinPaths<Tail>
   : never;
@@ -1889,7 +1890,7 @@ type JoinPaths<T extends string[]> = T extends [
  */
 type Join<T extends string[]> = T extends [
   infer Head extends string,
-  ...infer Tail extends string[]
+  ...infer Tail extends string[],
 ]
   ? `${Head}${Tail extends [] ? "" : `/${Join<Tail>}`}`
   : "";
