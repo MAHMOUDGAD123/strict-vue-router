@@ -1304,13 +1304,13 @@ type RouteHistoryStateFromName<
  */
 type RouteStaticTitleFromName<Name extends keyof CustomRouteMap> = NonEmpty<
   CustomRouteMap[Name]["staticTitle"]
->;
+> | (string & {});
 /**
  * Holds all possible route page dynamic title
  */
 type RouteDynamicTitleFromName<Name extends keyof CustomRouteMap> = NonEmpty<
   CustomRouteMap[Name]["dynamicTitle"]
->;
+> | (string & {});
 
 /**
  * Extract the allowed children names for a given route

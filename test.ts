@@ -1,10 +1,10 @@
 import { defineRouteRecord } from ".";
 
-void (defineRouteRecord({
+void defineRouteRecord({
   path: "/",
   meta: {
     title: {
-      'default': '' as never
+      default: "",
     },
   },
-}));
+});
