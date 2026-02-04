@@ -1860,7 +1860,7 @@ declare module "vue-router" {
     /**
      * The route title (document.title) value.
      */
-    title: RouteMetaTitleTyped<Name>;
+    title?: RouteMetaTitleTyped<Name>;
   }
 }
 
