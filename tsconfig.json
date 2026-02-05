@@ -11,5 +11,5 @@
     "declaration": true,
     "types": ["./types/index.d.ts"]
   },
-  "include": ["./index.ts", "./types/index.d.ts", "./test.ts"]
+  "include": ["./index.ts", "./types/index.d.ts"]
 }
