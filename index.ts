@@ -8,7 +8,7 @@ import type {
 } from "./types";
 
 export const resolveRouteTitle = (route: RouteLocationNormalized): void => {
-  if (!route.meta) return;
+  if (!route.meta || !route.meta.title) return;
   if (route.meta.title.isDynamic && route.meta.title.pattern) {
     let titleValue = route.meta.title.pattern as string;
 
