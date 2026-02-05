@@ -1,6 +1,6 @@
 {
   "name": "strict-vue-router",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "A comprehensive TypeScript type system to create a fully typed routing with vue-router",
   "types": "types/index.d.ts",
   "main": "index.ts",
