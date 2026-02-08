@@ -1216,7 +1216,7 @@ type RouteRecordPathFromName<
  */
 type RouteNameToPath<Name extends keyof CustomRouteMap> = Join<
   CustomRouteMap[Name]["path"]
->;
+> | (string & {});
 
 /**
  * Extract params keys by route name

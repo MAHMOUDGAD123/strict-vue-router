@@ -22,3 +22,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+__test__
