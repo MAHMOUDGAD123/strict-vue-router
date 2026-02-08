@@ -1561,7 +1561,7 @@ export interface CustomNavigationGuardNext<
 }
 
 /** A custom {@link NavigationGuardReturn} */
-type CustomNavigationGuardReturn<
+export type CustomNavigationGuardReturn<
   Name extends keyof CustomRouteMap = keyof CustomRouteMap,
 > =
   | void
